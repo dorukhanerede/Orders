@@ -1,8 +1,45 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<Orders.WebApp.Controllers.TopSoldProduct>
+
+@{
+    ViewData["Title"] = "Top Sold Products";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Top Sold Products</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Product Name</th>
+        <th>GTIN</th>
+        <th>Total Quantity Sold</th>
+        <th>Update Stock</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var product in Model)
+    {
+        <tr>
+            <td>@product.ProductName</td>
+            <td>@product.Gtin</td>
+            <td>@product.TotalQuantity</td>
+            <td>
+                <form asp-action="UpdateStock" method="post">
+                    <input type="hidden" name="merchantProductNo" value="@product.MerchantProductNo" />
+                    <input type="number" name="stock" value="25" min="1" class="form-control" />
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
